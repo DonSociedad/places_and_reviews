@@ -16,7 +16,6 @@ export class UsuarioServiceService {
 
     crearUsuario(usuarioDTO: UsuarioDto){
         const newUser = new this.userModel(usuarioDTO);
-        console.log(newUser)
         return newUser.save();
     }
 }
