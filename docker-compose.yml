@@ -1,49 +1,58 @@
+# Definición de los servicios (contenedores) que forman parte de la aplicación
 services:
+  # Servicio principal de la aplicación
   app:
-    container_name: gestion
-    build: .
+    container_name: contenedor_nest  # Nombre del contenedor
+    build: .  # Construye la imagen usando el Dockerfile en el directorio actual
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Expone el puerto 3000 del contenedor en el puerto 3000 del host
     volumes:
-      - ./gestion-usuarios:/app
+      - ./gestion-usuarios:/app  # Monta el directorio local ./gestion-usuarios en /app del contenedor
     depends_on:
-      - mongodb
-      - mysql
+      - mongodb  # Este servicio depende de mongodb
+      - mysql    # Este servicio depende de mysql
     environment:
-      - MONGO_HOST=mongodb
-      - MONGO_PORT=27017
-      - MONGO_USER=breaze
-      - MONGO_PASSWORD=12345678
-      - MYSQL_HOST=mysql
-      - MYSQL_PORT=3306
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=12345678
+      - MONGO_HOST=mongodb  # Dirección del servidor MongoDB
+      - MONGO_PORT=27017   # Puerto de MongoDB
+      - MONGO_USER=juanma  # Usuario de MongoDB
+      - MONGO_PASSWORD=Balto2018  # Contraseña de MongoDB
+      - MYSQL_HOST=mysql   # Dirección del servidor MySQL
+      - MYSQL_PORT=3306    # Puerto de MySQL
+      - MYSQL_USER=root    # Usuario de MySQL
+      - MYSQL_PASSWORD=Balto2018  # Contraseña de MySQL
     networks:
-      - red_demo_nest
+      - run_nest_network  # Conecta este servicio a la red run_nest_network
+
+  # Servicio de MongoDB
   mongodb:
-    image: mongo
+    image: mongo  # Usa la imagen oficial de MongoDB
     ports:
-      - "27017:27017"
+      - "27017:27017"  # Expone el puerto 27017 del contenedor en el puerto 27017 del host
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=breaze
-      - MONGO_INITDB_ROOT_PASSWORD=12345678
+      - MONGO_INITDB_ROOT_USERNAME=juanma  # Usuario root de MongoDB
+      - MONGO_INITDB_ROOT_PASSWORD=Balto2018  # Contraseña del usuario root de MongoDB
     volumes:
-      - mongo_data:/data/db
+      - mongo_data:/data/db  # Usa un volumen para persistir los datos de MongoDB
     networks:
-      - red_demo_nest
+      - run_nest_network  # Conecta este servicio a la red run_nest_network
+
+  # Servicio de MySQL
   mysql:
-    image: mysql:8.4.4
+    image: mysql:8.4.4  # Usa la imagen de MySQL en la versión 8.4.4
     ports:
-      - "3306:3306"
+      - "3307:3306"  # Expone el puerto 3306 del contenedor en el puerto 3306 del host
     environment:
-      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_ROOT_PASSWORD=12345678  # Contraseña del usuario root de MySQL
     volumes:
-      - mysql_data:/var/lib/sql
+      - mysql_data:/var/lib/sql  # Usa un volumen para persistir los datos de MySQL
     networks:
-      - red_demo_nest
-  
+      - run_nest_network  # Conecta este servicio a la red run_nest_network
+
+# Definición de volúmenes para persistir datos fuera de los contenedores
 volumes:
-    mongo_data:
-    mysql_data:
+  mongo_data:  # Volumen para MongoDB
+  mysql_data:  # Volumen para MySQL
+
+# Definición de redes para la comunicación entre contenedores
 networks:
-    red_demo_nest:
+ run_nest_network:  # Red personalizada para conectar todos los servicios
